@@ -9,7 +9,7 @@ package model;
 import java.net.*;
 import java.io.*;
 
-class SocketAction extends Thread {
+public class SocketAction extends Thread {
 	private ObjectInputStream inStream = null;
 	private ObjectOutputStream outStream = null;
 	private Socket socket = null;
