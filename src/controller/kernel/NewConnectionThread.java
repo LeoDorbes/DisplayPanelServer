@@ -20,24 +20,29 @@ public class NewConnectionThread implements Runnable {
 		try {
 			this.serverSocket = new ServerSocket(datas.getPort());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Impossible de démarrer le serveur d'écoute avec le port : "+datas.getPort());
 			e.printStackTrace();
 		}
 	}
 
 	public void run() {
 		
+		System.out.println("Initialisation du serveur --- Ecoute du port : "+datas.getPort());
+		
 		while (datas.isServerOn()) {
-			System.out.println("Initialisation du serveur --- Ecoute du port : "+datas.getPort());
 			try {
 				System.out.println("En attente de connexion.");
 				Socket socket = serverSocket.accept();
 				SocketAction socketAction = new SocketAction(socket);
 				System.out.println("Nouvelle connexion detectée!");
 				
-				Thread outputThread = new Thread(new OutputThread(socketAction,datas));
+				OutputThread opt = new OutputThread(socketAction,datas); 
+				datas.getOutputThreads().add(opt);
+				int index = datas.getOutputThreads().indexOf(opt);
+				opt.setIndex(index);
+				Thread outputThread = new Thread(opt);
 				outputThread.start();
-				Thread inputThread = new Thread(new InputThread(socketAction,datas));
+				Thread inputThread = new Thread(new InputThread(socketAction,datas,opt));
 				inputThread.start();
 
 			} catch (IOException e) {

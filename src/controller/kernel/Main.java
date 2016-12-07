@@ -11,6 +11,7 @@ public class Main {
 		Datas datas = new Datas();
 		
 		MainFrame mainFrame = new MainFrame(datas);
+		datas.setMainFrame(mainFrame);
 		Thread newConnectionThread = new Thread(new NewConnectionThread(datas));
 		newConnectionThread.start();
 		

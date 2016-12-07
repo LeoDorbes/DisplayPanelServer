@@ -23,5 +23,27 @@ public class MainFrame extends JFrame {
 		this.setContentPane(mainPanel);
 
 	}
+	
+	public void updateContent(){
+		if(datas.isGameOn()){
+			
+			mainPanel.getLblSportName().setText(datas.getCurrentSportName());
+			mainPanel.getLblHomeName().setText(datas.getHomeTeam().getName());
+			mainPanel.getLblGuestName().setText(datas.getGuestTeam().getName());
+			
+			mainPanel.getLblHomeScore().setText(""+datas.getHomeTeam().getScore());
+			mainPanel.getLblGuestScore().setText(""+datas.getGuestTeam().getScore());
+			
+		}else{
+			
+			mainPanel.getLblSportName().setText("Sport Name");
+			mainPanel.getLblHomeName().setText("Home Name");
+			mainPanel.getLblGuestName().setText("Guest Name");
+			
+			mainPanel.getLblHomeScore().setText("0");
+			mainPanel.getLblGuestScore().setText("0");
+			
+		}
+	}
 
 }
