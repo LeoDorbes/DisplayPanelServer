@@ -22,8 +22,14 @@ public class Datas {
 	// Match datas :
 	private Team homeTeam;
 	private Team guestTeam;
+	
+	//Match time datas :
 	private boolean gameOn;
-	private Timer timer;
+	private boolean gamePaused;
+	private long previousTime;
+	private Chronometer chronometer;
+	private long matchTime;
+	private boolean countDownward;
 
 	// View datas :
 	private MainFrame mainFrame;
@@ -33,6 +39,7 @@ public class Datas {
 		port = 7789;
 		this.serverOn = true;
 		this.gameOn = false;
+		previousTime = 0;
 	}
 
 	public synchronized void broadcastCmd(String cmd) {
@@ -154,13 +161,46 @@ public class Datas {
 	public void setOutputThreads(ArrayList<OutputThread> outputThreads) {
 		this.outputThreads = outputThreads;
 	}
-
-	public Timer getTimer() {
-		return timer;
+	
+	public Chronometer getChronometer() {
+		return chronometer;
 	}
 
-	public void setTimer(Timer timer) {
-		this.timer = timer;
+	public void setChronometer(Chronometer chronometer) {
+		this.chronometer = chronometer;
 	}
 
+	public boolean isGamePaused() {
+		return gamePaused;
+	}
+
+	public void setGamePaused(boolean gamePaused) {
+		this.gamePaused = gamePaused;
+	}
+
+	public long getPreviousTime() {
+		return previousTime;
+	}
+
+	public void setPreviousTime(long previousTime) {
+		this.previousTime = previousTime;
+	}
+
+	public long getMatchTime() {
+		return matchTime;
+	}
+
+	public void setMatchTime(long matchTime) {
+		this.matchTime = matchTime;
+	}
+
+	public boolean isCountDownward() {
+		return countDownward;
+	}
+
+	public void setCountDownward(boolean countDownward) {
+		this.countDownward = countDownward;
+	}
+	
+	
 }

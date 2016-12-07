@@ -46,16 +46,16 @@ public class MainPanel extends JPanel{
 		lblGuestScore.setBounds(485, 164, 115, 43);
 		add(lblGuestScore);
 		
-		this.lblTimer = new JLabel("Timer");
+		this.lblTimer = new JLabel("Timer :");
 		lblTimer.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTimer.setFont(new Font("Times New Roman", Font.BOLD, 26));
-		lblTimer.setBounds(247, 249, 115, 43);
+		lblTimer.setBounds(141, 287, 115, 43);
 		add(lblTimer);
 		
 		this.lblTimerCount = new JLabel("0");
-		lblTimerCount.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTimerCount.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTimerCount.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-		lblTimerCount.setBounds(247, 289, 115, 43);
+		lblTimerCount.setBounds(266, 289, 115, 43);
 		add(lblTimerCount);
 		
 		lblSportName = new JLabel("Sport Name");

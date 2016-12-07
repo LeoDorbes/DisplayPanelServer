@@ -35,7 +35,7 @@ public class InputThread implements Runnable{
 					case "new game":
 						GameActions.newGame(s,datas,outputThread.getIndex());
 						break;
-					case "end game": //This should be sendable from the client @TODO (work somewhere else?)
+					case "end game": //This should NOT be sendable from the client @TODO (work somewhere else?)
 						GameActions.endGame(datas);
 						break;
 					case "cancel game":
@@ -44,6 +44,31 @@ public class InputThread implements Runnable{
 					case "get game":
 						GameActions.sendGame(datas, outputThread.getIndex());
 						break;
+						
+					case "pause game":
+						GameActions.pauseGame(datas);
+						break;
+						
+					case "home 1":
+						GameActions.score(datas, 0, 1);
+						break;
+					case "home 2":
+						GameActions.score(datas, 0, 2);
+						break;
+					case "home 3":
+						GameActions.score(datas, 0, 3);
+						break;
+					case "guest 1":
+						GameActions.score(datas, 1, 1);
+						break;
+					case "guest 2":
+						GameActions.score(datas, 1, 2);
+						break;
+					case "guest 3":
+						GameActions.score(datas, 1, 3);
+						break;
+						
+						
 					default:
 						break;
 					}

@@ -3,8 +3,8 @@ package controller.actions;
 import java.util.Timer;
 
 import model.BasketballTeam;
+import model.Chronometer;
 import model.Datas;
-import model.GameFinishedTask;
 import model.RugbyTeam;
 import model.SoccerTeam;
 
@@ -44,6 +44,7 @@ public class GameActions {
 				long timeVal = 0;
 				try {
 					timeVal = Long.parseLong(timeString);
+					datas.setMatchTime(timeVal);
 				} catch (NumberFormatException e) {
 					System.out.println("Error : Element not a timer");
 					error = true;
@@ -57,12 +58,15 @@ public class GameActions {
 					if (values[1].equalsIgnoreCase("football")) {
 						datas.setHomeTeam(new SoccerTeam(homeTeamName));
 						datas.setGuestTeam(new SoccerTeam(guestTeamName));
+						datas.setCountDownward(false);
 					} else if (values[1].equalsIgnoreCase("rugby")) {
 						datas.setHomeTeam(new RugbyTeam(homeTeamName));
 						datas.setGuestTeam(new RugbyTeam(guestTeamName));
+						datas.setCountDownward(false);
 					} else if (values[1].equalsIgnoreCase("basketball")) {
 						datas.setHomeTeam(new BasketballTeam(homeTeamName));
 						datas.setGuestTeam(new BasketballTeam(guestTeamName));
+						datas.setCountDownward(true);
 					} else {
 						System.out.println("Error : Sport not found");
 						error = true;
@@ -70,12 +74,14 @@ public class GameActions {
 				}
 				if (error == false) {
 
-					datas.setTimer(new Timer());
-					datas.getTimer().schedule(new GameFinishedTask(datas.getOutputThreads(), datas), timeVal);
+					datas.setChronometer(new Chronometer(datas, datas.getMatchTime()*1000, datas.isCountDownward()));
+					Thread t = new Thread(datas.getChronometer());
+					t.start();
+					
 					datas.setGameOn(true);
+					datas.setGamePaused(false);
 
 					datas.broadcastCmd(buildTeamCommand(datas));
-					
 
 				}
 			}
@@ -99,8 +105,10 @@ public class GameActions {
 			datas.setHomeTeam(null);
 			datas.setGuestTeam(null);
 			datas.setGameOn(false);
-			datas.getTimer().cancel();
-			datas.setTimer(null);
+			datas.setGamePaused(false);
+			datas.getChronometer().stopChronometer();
+			datas.setChronometer(null);
+			
 
 			datas.broadcastCmd("Game Finished");
 			System.out.println("partie terminée @TODO");
@@ -125,9 +133,11 @@ public class GameActions {
 			datas.setHomeTeam(null);
 			datas.setGuestTeam(null);
 			datas.setGameOn(false);
-			datas.getTimer().cancel();
-			datas.setTimer(null);
-
+			datas.setGamePaused(false);
+			datas.getChronometer().stopChronometer();
+			datas.setChronometer(null);
+			
+			
 			datas.broadcastCmd("Game Canceled");
 			System.out.println("partie annulée @TODO");
 		} else {
@@ -158,7 +168,7 @@ public class GameActions {
 	 * 
 	 * @return The string representing the current game
 	 */
-	public static String buildTeamCommand(Datas datas) {
+	public static synchronized String buildTeamCommand(Datas datas) {
 		String t = "";
 		String s = "Current Game" + Datas.separator;
 
@@ -170,4 +180,100 @@ public class GameActions {
 		return s;
 	}
 
+	public static synchronized void pauseGame(Datas datas) {
+		// Might need to inform the client later, for now it's not necessary
+		// because the client doesn't handle Time
+		datas.setGamePaused(!datas.isGamePaused());
+		if (datas.isGamePaused()){
+			System.out.println("Game paused");
+			datas.setPreviousTime(datas.getChronometer().stopChronometer());
+		}else{
+			
+			System.out.println("Match time : "+datas.getMatchTime());
+			System.out.println("Previous time : "+datas.getPreviousTime());
+			System.out.println("Data counted downward : "+datas.isCountDownward());
+			datas.setChronometer(new Chronometer(datas, (datas.getMatchTime()*1000)-datas.getPreviousTime(), datas.getPreviousTime(), datas.isCountDownward()));
+			Thread t = new Thread(datas.getChronometer());
+			t.start();
+			System.out.println("Game pause stopped");
+		}
+			
+
+	}
+
+	// Team 0 is Home, 1 is Guest (default is guest)
+	public static synchronized void score(Datas datas, int team, int scoreType) {
+
+		// Rugby :
+		if (datas.getHomeTeam().getClass() == RugbyTeam.class) {
+			if (team == 0) {
+				RugbyTeam r = (RugbyTeam) datas.getHomeTeam();
+				if (scoreType == 1) {
+					r.scoreConversion();
+				} else if (scoreType == 2) {
+					r.scoreGoalKick();
+				} else if (scoreType == 3) {
+					r.scoreTry();
+				}
+			} else {
+				RugbyTeam r = (RugbyTeam) datas.getGuestTeam();
+				if (scoreType == 1) {
+					r.scoreConversion();
+				} else if (scoreType == 2) {
+					r.scoreGoalKick();
+				} else if (scoreType == 3) {
+					r.scoreTry();
+				}
+			}
+
+			// Soccer
+		} else if (datas.getHomeTeam().getClass() == SoccerTeam.class) {
+			if (team == 0) {
+				SoccerTeam s = (SoccerTeam) datas.getHomeTeam();
+				if (scoreType == 1) {
+					s.scoreGoal();
+				} else if (scoreType == 2) {
+					System.out.println("Error : Impossible action, type 2 not defined for Soccer");
+				} else if (scoreType == 3) {
+					System.out.println("Error : Impossible action, type 3 not defined for Soccer");
+				}
+
+			} else {
+				SoccerTeam s = (SoccerTeam) datas.getGuestTeam();
+				if (scoreType == 1) {
+					s.scoreGoal();
+				} else if (scoreType == 2) {
+					System.out.println("Error : Impossible action, type 2 not defined for Soccer");
+				} else if (scoreType == 3) {
+					System.out.println("Error : Impossible action, type 3 not defined for Soccer");
+				}
+			}
+
+			// Basketball
+		} else if (datas.getHomeTeam().getClass() == BasketballTeam.class) {
+			if (team == 0) {
+				BasketballTeam b = (BasketballTeam) datas.getHomeTeam();
+				if (scoreType == 1) {
+					b.scoreFreeThrow();
+				} else if (scoreType == 2) {
+					b.scoreBasket();
+				} else if (scoreType == 3) {
+					b.scoreThreePointBasket();
+				}
+
+			} else {
+				BasketballTeam b = (BasketballTeam) datas.getGuestTeam();
+				if (scoreType == 1) {
+					b.scoreFreeThrow();
+				} else if (scoreType == 2) {
+					b.scoreBasket();
+				} else if (scoreType == 3) {
+					b.scoreThreePointBasket();
+				}
+			}
+		} else {
+			System.out.println("Error : Invalid command sent to score in GameAction");
+		}
+
+	}
 }

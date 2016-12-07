@@ -23,27 +23,44 @@ public class MainFrame extends JFrame {
 		this.setContentPane(mainPanel);
 
 	}
-	
-	public void updateContent(){
-		if(datas.isGameOn()){
-			
+
+	public void updateContent() {
+		if (datas.isGameOn()) {
+
 			mainPanel.getLblSportName().setText(datas.getCurrentSportName());
 			mainPanel.getLblHomeName().setText(datas.getHomeTeam().getName());
 			mainPanel.getLblGuestName().setText(datas.getGuestTeam().getName());
-			
-			mainPanel.getLblHomeScore().setText(""+datas.getHomeTeam().getScore());
-			mainPanel.getLblGuestScore().setText(""+datas.getGuestTeam().getScore());
-			
-		}else{
-			
+
+			mainPanel.getLblHomeScore().setText("" + datas.getHomeTeam().getScore());
+			mainPanel.getLblGuestScore().setText("" + datas.getGuestTeam().getScore());
+
+		} else {
+
 			mainPanel.getLblSportName().setText("Sport Name");
 			mainPanel.getLblHomeName().setText("Home Name");
 			mainPanel.getLblGuestName().setText("Guest Name");
-			
+
 			mainPanel.getLblHomeScore().setText("0");
 			mainPanel.getLblGuestScore().setText("0");
-			
+			mainPanel.getLblTimerCount().setText("");
+
 		}
+	}
+
+	public void updateChronometer(long val) {
+		val = val / 1000;
+		
+		long mins = 0, hours = 0, secs = 0;
+		while (val >= 3600) {
+			hours++;
+			val = val - 3600;
+		}
+		while(val>=60){
+			mins++;
+			val = val -60;
+		}
+		secs = val;
+		mainPanel.getLblTimerCount().setText(hours+":"+mins+":"+secs);
 	}
 
 }
