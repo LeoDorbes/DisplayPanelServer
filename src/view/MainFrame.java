@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.swing.JFrame;
 
-import model.Datas;
+import model.global.Datas;
 
 public class MainFrame extends JFrame {
 

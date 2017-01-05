@@ -1,4 +1,11 @@
 package model;
+
+/**
+ * Team class representing a generic instance of the Team.
+ * 
+ * @author Léo Dorbes
+ * @version 1.0 08 Dec, 2016.
+ */
 public class Team {
 
 	protected String name;

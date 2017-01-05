@@ -1,10 +1,15 @@
-package model;
+package model.global;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Timer;
 
+import model.BasketballTeam;
+import model.Chronometer;
+import model.RugbyTeam;
+import model.SoccerTeam;
+import model.Team;
 import view.MainFrame;
 import controller.packets.OutputThread;
 
@@ -36,7 +41,7 @@ public class Datas {
 
 	public Datas() {
 		outputThreads = new ArrayList<OutputThread>();
-		port = 7789;
+		port = 9455;
 		this.serverOn = true;
 		this.gameOn = false;
 		previousTime = 0;

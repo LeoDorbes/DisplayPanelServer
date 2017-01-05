@@ -34,6 +34,7 @@ public class SocketAction extends Thread {
 	}
 
 	public void run() {
+		
 	}
 
 	public void send(Object s) {

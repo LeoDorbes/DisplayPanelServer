@@ -1,5 +1,9 @@
 package model;
 
+import controller.actions.GameActions;
+import controller.data.DatabaseWriter;
+import model.global.Datas;
+
 public class Chronometer implements Runnable {
 
 	private boolean stopped;
@@ -40,6 +44,7 @@ public class Chronometer implements Runnable {
 		while (!this.stopped && !this.finished) {
 
 			currentTime = System.currentTimeMillis();
+			
 
 			long display;
 			long duration;
@@ -76,8 +81,20 @@ public class Chronometer implements Runnable {
 
 		}
 		
-		//@Todo : Handle the work here
-
+		
+		
+		if(this.finished){
+			//@Todo : Handle the saving work here
+			DatabaseWriter dw = new DatabaseWriter();
+			
+			String home = datas.getHomeTeam().getName();
+			int homeScore = datas.getHomeTeam().getScore();
+			String guest = datas.getGuestTeam().getName();
+			int guestScore = datas.getGuestTeam().getScore();
+			
+			dw.addMatch(home, guest, homeScore, guestScore);
+			GameActions.endGame(datas);
+		}
 	}
 
 	public long stopChronometer() {

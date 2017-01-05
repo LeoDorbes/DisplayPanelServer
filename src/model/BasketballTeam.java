@@ -1,6 +1,11 @@
 package model;
 
-
+/**
+ * BasketballTeam class representing a specific instance of a basketball team.
+ * 
+ * @author Léo Dorbes
+ * @version 1.0 08 Dec, 2016.
+ */
 public class BasketballTeam extends Team {
 
 	public BasketballTeam(String name) {

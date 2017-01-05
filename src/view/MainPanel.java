@@ -2,10 +2,14 @@ package view;
 
 import javax.swing.JPanel;
 
-import model.Datas;
+import model.global.Datas;
+
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.SwingConstants;
+
 import java.awt.Color;
 
 public class MainPanel extends JPanel{

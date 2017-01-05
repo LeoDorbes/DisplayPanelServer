@@ -1,6 +1,11 @@
 package model;
 
-
+/**
+ * RugbyTeam class representing a specific instance of a rugby team.
+ * 
+ * @author Léo Dorbes
+ * @version 1.0 08 Dec, 2016.
+ */
 public class RugbyTeam extends Team {
 
 	public RugbyTeam(String name) {

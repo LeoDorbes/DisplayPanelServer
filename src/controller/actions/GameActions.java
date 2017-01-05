@@ -4,9 +4,9 @@ import java.util.Timer;
 
 import model.BasketballTeam;
 import model.Chronometer;
-import model.Datas;
 import model.RugbyTeam;
 import model.SoccerTeam;
+import model.global.Datas;
 
 /**
  * GameActions contains all the controller methods related to the network of the
@@ -74,10 +74,10 @@ public class GameActions {
 				}
 				if (error == false) {
 
-					datas.setChronometer(new Chronometer(datas, datas.getMatchTime()*1000, datas.isCountDownward()));
+					datas.setChronometer(new Chronometer(datas, datas.getMatchTime() * 1000, datas.isCountDownward()));
 					Thread t = new Thread(datas.getChronometer());
 					t.start();
-					
+
 					datas.setGameOn(true);
 					datas.setGamePaused(false);
 
@@ -108,7 +108,6 @@ public class GameActions {
 			datas.setGamePaused(false);
 			datas.getChronometer().stopChronometer();
 			datas.setChronometer(null);
-			
 
 			datas.broadcastCmd("Game Finished");
 			System.out.println("partie terminée @TODO");
@@ -136,8 +135,7 @@ public class GameActions {
 			datas.setGamePaused(false);
 			datas.getChronometer().stopChronometer();
 			datas.setChronometer(null);
-			
-			
+
 			datas.broadcastCmd("Game Canceled");
 			System.out.println("partie annulée @TODO");
 		} else {
@@ -180,30 +178,46 @@ public class GameActions {
 		return s;
 	}
 
+	/**
+	 * This method handles the pausing/unpausing of the current game.
+	 * 
+	 * @param datas
+	 *            accessor to the datas from the server
+	 */
 	public static synchronized void pauseGame(Datas datas) {
 		// Might need to inform the client later, for now it's not necessary
 		// because the client doesn't handle Time
 		datas.setGamePaused(!datas.isGamePaused());
-		if (datas.isGamePaused()){
+		if (datas.isGamePaused()) {
 			System.out.println("Game paused");
 			datas.setPreviousTime(datas.getChronometer().stopChronometer());
-		}else{
-			
-			System.out.println("Match time : "+datas.getMatchTime());
-			System.out.println("Previous time : "+datas.getPreviousTime());
-			System.out.println("Data counted downward : "+datas.isCountDownward());
-			datas.setChronometer(new Chronometer(datas, (datas.getMatchTime()*1000)-datas.getPreviousTime(), datas.getPreviousTime(), datas.isCountDownward()));
+		} else {
+
+			System.out.println("Match time : " + datas.getMatchTime());
+			System.out.println("Previous time : " + datas.getPreviousTime());
+			System.out.println("Data counted downward : " + datas.isCountDownward());
+			datas.setChronometer(new Chronometer(datas, (datas.getMatchTime() * 1000) - datas.getPreviousTime(), datas.getPreviousTime(), datas.isCountDownward()));
 			Thread t = new Thread(datas.getChronometer());
 			t.start();
 			System.out.println("Game pause stopped");
 		}
-			
 
 	}
 
-	// Team 0 is Home, 1 is Guest (default is guest)
+	/**
+	 * This method is called when the client wants to score points in the match.
+	 * 
+	 * @param datas
+	 *            accessor to the datas from the server
+	 * @param team
+	 *            the int representation of the team, 0 for Home team, 1 for
+	 *            Guest team.
+	 * @param scoreType
+	 *            the int representation of the score action wich is handled by
+	 *            this method, different result for each sport.
+	 */
 	public static synchronized void score(Datas datas, int team, int scoreType) {
-
+		// Team 0 is Home, 1 is Guest (default is guest)
 		// Rugby :
 		if (datas.getHomeTeam().getClass() == RugbyTeam.class) {
 			if (team == 0) {

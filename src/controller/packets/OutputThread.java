@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import model.Datas;
 import model.SocketAction;
+import model.global.Datas;
 
 public class OutputThread implements Runnable {
 
